@@ -9,6 +9,9 @@ import { environment } from '../../../../environments/environment';
   selector: 'app-user-create',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  
+  //Added placeholder to line 24
+  //UX tweak added to let users know to enter username
   template: `
     <div>
       <h1>User Create</h1>
@@ -18,7 +21,7 @@ import { environment } from '../../../../environments/environment';
       <form [formGroup]="newUserForm" (ngSubmit)="addUser();" class="form">
         <div class="form__group">
           <label class="label" for="username">Username<span class="required">*</span></label>
-          <input class="input" type="text" formControlName="username" id="username" name="username">
+          <input class="input" type="text" formControlName="username" id="username" name="username" placeholder="Enter your username">
         </div>
 
         <div class="form__group">
