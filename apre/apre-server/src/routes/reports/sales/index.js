@@ -78,4 +78,29 @@ router.get('/regions/:region', (req, res, next) => {
   }
 });
 
+/**
+ * @description
+ * NEW ENDPOINT ADDED: Fetches all sales data
+ *
+ * GET /
+ *
+ * Fetches all sales data.
+ *
+ * Example:
+ * fetch('/')
+ *  .then(response => response.json())
+ *  .then(data => console.log(data));
+ */
+router.get('/', (req, res, next) => {
+  try {
+    mongo (async db => {
+      const sales = await db.collection('sales').find().toArray();
+      res.send(sales);
+    }, next);
+  } catch (err) {
+    console.error('Error getting sales data: ', err);
+    next(err);
+  }
+});
+
 module.exports = router;

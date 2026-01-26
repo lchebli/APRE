@@ -143,3 +143,84 @@ describe('Apre Sales Report API - Sales by Region', () => {
     });
   });
 });
+
+// NEW UNIT TESTS ADDED: Three unit tests for the new GET / endpoint
+// Test the sales report API - All Sales
+describe('Apre Sales Report API - All Sales', () => {
+  beforeEach(() => {
+    mongo.mockClear();
+  });
+
+  // Test the sales/ endpoint
+  it('should fetch all sales data', async () => {
+    mongo.mockImplementation(async (callback) => {
+      const db = {
+        collection: jest.fn().mockReturnThis(),
+        find: jest.fn().mockReturnThis(),
+        toArray: jest.fn().mockResolvedValue([
+          {
+            _id: '1',
+            salesperson: 'John Doe',
+            region: 'North',
+            amount: 1000
+          },
+          {
+            _id: '2',
+            salesperson: 'Jane Smith',
+            region: 'South',
+            amount: 1500
+          }
+        ])
+      };
+      await callback(db);
+    });
+
+    const response = await request(app).get('/api/reports/sales/'); // Send a GET request to the sales/ endpoint
+
+    expect(response.status).toBe(200); // Expect a 200 status code
+    expect(response.body).toEqual([
+      {
+        _id: '1',
+        salesperson: 'John Doe',
+        region: 'North',
+        amount: 1000
+      },
+      {
+        _id: '2',
+        salesperson: 'Jane Smith',
+        region: 'South',
+        amount: 1500
+      }
+    ]); // Expect the response body to match the expected data
+  });
+
+  // Test the sales/ endpoint with no sales data
+  it('should return 200 with an empty array if no sales data is found', async () => {
+    mongo.mockImplementation(async (callback) => {
+      const db = {
+        collection: jest.fn().mockReturnThis(),
+        find: jest.fn().mockReturnThis(),
+        toArray: jest.fn().mockResolvedValue([])
+      };
+      await callback(db);
+    });
+
+    const response = await request(app).get('/api/reports/sales/'); // Send a GET request to the sales/ endpoint
+
+    expect(response.status).toBe(200); // Expect a 200 status code
+    expect(response.body).toEqual([]); // Expect the response body to match the expected data
+  });
+
+  // Test the sales/ endpoint with database error
+  it('should handle database errors gracefully', async () => {
+    mongo.mockImplementation(async (operations, next) => {
+      const error = new Error('Database connection failed');
+      error.status = 500;
+      next(error);
+    });
+
+    const response = await request(app).get('/api/reports/sales/'); // Send a GET request to the sales/ endpoint
+
+    expect(response.status).toBe(500); // Expect a 500 status code for internal server error
+  });
+});
