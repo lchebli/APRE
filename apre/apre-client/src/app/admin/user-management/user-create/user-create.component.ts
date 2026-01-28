@@ -9,9 +9,9 @@ import { environment } from '../../../../environments/environment';
   selector: 'app-user-create',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
-  
-  //Added placeholder to line 24
-  //UX tweak added to let users know to enter username
+
+  //Added placeholder to line 24 WEEK 2 MINOR TASK M-001
+  //WEEK 3 MINOR TASK M-004 - FIXED LINE 33 changed "for" attribute from password to email and added placeholder to line 34
   template: `
     <div>
       <h1>User Create</h1>
@@ -30,8 +30,8 @@ import { environment } from '../../../../environments/environment';
         </div>
 
         <div class="form__group">
-          <label class="label" for="password">Email<span class="required">*</span></label>
-          <input class="input" type="text" formControlName="email" id="email" name="email">
+          <label class="label" for="email">Email<span class="required">*</span></label>
+          <input class="input" type="text" formControlName="email" id="email" name="email" placeholder="Enter your email">
         </div>
 
         <div class="form__group">
