@@ -21,7 +21,11 @@ import { ConfirmDialogComponent } from "../../../shared/confirm-dialog/confirm-d
         <thead>
           <th>Username</th>
           <th>Email</th>
-          <th>Role</th>
+
+          <!-- Added red asterisk (*) to make Role a required field -->
+
+          <th>Role <span style="color: red;">*</span></th>
+
           <th>Functions</th>
         </thead>
         <tbody>
