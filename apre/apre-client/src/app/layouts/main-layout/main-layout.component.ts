@@ -315,8 +315,10 @@ export class MainLayoutComponent {
     // Add more reports as needed
   ];
 
+  // February 8, 2026 Added array to hold the customer feedback reports links in the side menu
   customerFeedbackReports = [
-    { name: 'Channel Rating by Month', url: '/reports/customer-feedback/channel-rating-by-month' }
+    { name: 'Channel Rating by Month', url: '/reports/customer-feedback/channel-rating-by-month' },
+    { name: 'Feedback by Product', url: '/reports/customer-feedback/feedback-by-product' }
     // Add more reports as needed
   ];
 

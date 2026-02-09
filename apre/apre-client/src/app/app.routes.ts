@@ -1,7 +1,6 @@
 /**
  * Author: Professor Krasso
  * Date: 8/8/2024
- * File: app.routes.ts
  * Description: Application routes
  */
 
@@ -20,12 +19,15 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { UserCreateComponent } from './admin/user-management/user-create/user-create.component';
 import { SalesByRegionComponent } from './reports/sales/sales-by-region/sales-by-region.component';
 import { SalesComponent } from './reports/sales/sales.component';
+// Added import for the new SalesReportComponent - displays overall sales data in chart format
 import { SalesReportComponent } from './reports/sales/sales-report/sales-report.component';
 import { AgentPerformanceComponent } from './reports/agent-performance/agent-performance.component';
 import { CallDurationByDateRangeComponent } from './reports/agent-performance/call-duration-by-date-range/call-duration-by-date-range.component';
 import { ChannelRatingByMonthComponent } from './reports/customer-feedback/channel-rating-by-month/channel-rating-by-month.component';
 import { CustomerFeedbackComponent } from './reports/customer-feedback/customer-feedback.component';
 import { SalesByRegionTabularComponent } from './reports/sales/sales-by-region-tabular/sales-by-region-tabular.component';
+// Added: February 8, 2026, New customer feedback by product report component
+import { FeedbackByProductComponent } from './reports/customer-feedback/feedback-by-product/feedback-by-product.component';
 
 // Export user-management routes
 export const userManagementRoutes: Routes = [
@@ -59,7 +61,7 @@ export const salesReportRoutes: Routes = [
     component: SalesByRegionTabularComponent
   },
   {
-    path: 'sales-report',
+    path: 'sales-report',  // New route added for overall sales report component
     component: SalesReportComponent
   }
 ];
@@ -77,6 +79,11 @@ export const customerFeedbackRoutes: Routes = [
   {
     path: 'channel-rating-by-month',
     component: ChannelRatingByMonthComponent
+  },
+  // Added: February 8, 2026 Route for customer feedback by product report
+  {
+    path: 'feedback-by-product',
+    component: FeedbackByProductComponent
   }
 ];
 

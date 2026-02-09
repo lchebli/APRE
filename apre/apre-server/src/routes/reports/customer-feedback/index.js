@@ -92,4 +92,55 @@ router.get('/channel-rating-by-month', (req, res, next) => {
   }
 });
 
+/**
+ * @description
+ *
+ * GET /feedback-by-product
+ *
+ * Added: February 8, 2026
+ Fetches customer feedback data grouped by average rating for each product. This endpoint combines all customer feedback entries in the customerFeedback collection, groups them by product, and averages rating for each product. The results are sorted by highly rated to lowest.
+
+  * Example: fetch('/feedback-by-product') will return a JSON array of products with their average rating, feedback count, and total rating.
+
+ */
+router.get('/feedback-by-product', (req, res, next) => {
+  try {
+    mongo (async db => {
+      const data = await db.collection('customerFeedback').aggregate([
+        // 1: Groups all feedback by product and calculate the average rating, count of feedback entries, and total rating for each product
+        {
+          $group: {
+            _id: '$product',
+            averageRating: { $avg: '$rating' },
+            feedbackCount: { $sum: 1 },
+            totalRating: { $sum: '$rating' }
+          }
+        },
+        // 2: Reshape the data and round the average rating to 2 decimal places for better readability
+        {
+          $project: {
+            _id: 0,
+            product: '$_id',
+            averageRating: { $round: ['$averageRating', 2] },
+            feedbackCount: 1,
+            totalRating: 1
+          }
+        },
+        //3: Sort by average rating in descending order (highest rated first)
+        {
+          $sort: {
+            averageRating: -1
+          }
+        }
+      ]).toArray();
+
+      res.send(data);
+    }, next);
+
+  } catch (err) {
+    console.error('Error in /feedback-by-product', err);
+    next(err);
+  }
+});
+
 module.exports = router;

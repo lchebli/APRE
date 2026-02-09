@@ -75,4 +75,81 @@ describe('Apre Customer Feedback API', () => {
       type: 'error'
     });
   });
+
+  // Added: February 8, 2026 - Test the new feedback-by-product endpoint
+  // Test 1: Verify the endpoint successfully fetches and combines feedback data by product
+  it('should fetch customer feedback data grouped by product', async () => {
+    mongo.mockImplementation(async (callback) => {
+      const db = {
+        collection: jest.fn().mockReturnThis(),
+        aggregate: jest.fn().mockReturnValue({
+          toArray: jest.fn().mockResolvedValue([
+            {
+              product: 'Product A',
+              averageRating: 4.5,
+              feedbackCount: 10,
+              totalRating: 45
+            },
+            {
+              product: 'Product B',
+              averageRating: 3.8,
+              feedbackCount: 5,
+              totalRating: 19
+            }
+          ])
+        })
+      };
+      await callback(db);
+    });
+
+    const response = await request(app).get('/api/reports/customer-feedback/feedback-by-product');
+
+    // Expect a 200 status code
+    expect(response.status).toBe(200);
+
+    // Expect the response body to match the expected data
+    expect(response.body).toEqual([
+      {
+        product: 'Product A',
+        averageRating: 4.5,
+        feedbackCount: 10,
+        totalRating: 45
+      },
+      {
+        product: 'Product B',
+        averageRating: 3.8,
+        feedbackCount: 5,
+        totalRating: 19
+      }
+    ]);
+  });
+
+  // Test 2: Verify the endpoint handles empty data cleanly
+  it('should return an empty array when no feedback data exists', async () => {
+    mongo.mockImplementation(async (callback) => {
+      const db = {
+        collection: jest.fn().mockReturnThis(),
+        aggregate: jest.fn().mockReturnValue({
+          toArray: jest.fn().mockResolvedValue([])
+        })
+      };
+      await callback(db);
+    });
+
+    const response = await request(app).get('/api/reports/customer-feedback/feedback-by-product');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+
+  // Test 3: Verify the endpoint handles database errors properly
+  it('should handle database errors gracefully for feedback-by-product', async () => {
+    mongo.mockImplementation(async (callback, next) => {
+      const error = new Error('Database connection failed');
+      next(error);
+    });
+
+    const response = await request(app).get('/api/reports/customer-feedback/feedback-by-product');
+    expect(response.status).toBe(500);
+    expect(response.body.type).toBe('error');
+  });
 });
